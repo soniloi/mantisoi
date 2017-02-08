@@ -8,7 +8,7 @@ class MwParser:
     def __init__(self):
         self.title = ""
         self.intro = ""
-        self.sections = ""
+        self.sections = []
 
     def parse_article(self, filename):
         self.title, text = XmlParser.parse_article(filename)
