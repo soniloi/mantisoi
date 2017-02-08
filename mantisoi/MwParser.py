@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
-import TextParser
-import XmlParser
+from TextParser import TextParser
+from XmlParser import XmlParser
 
 class MwParser:
 
@@ -11,7 +11,5 @@ class MwParser:
         self.sections = ""
 
     def parse_article(self, filename):
-        xml_parser = XmlParser.XmlParser()
-        self.title, text = xml_parser.parse_article(filename)
-        text_parser = TextParser.TextParser()
-        self.intro, self.sections = text_parser.parse_text(text)
+        self.title, text = XmlParser.parse_article(filename)
+        self.intro, self.sections = TextParser.parse_text(text)

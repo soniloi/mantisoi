@@ -2,7 +2,8 @@
 
 class TextParser:
 
-    def parse_text(self, text):
+    @staticmethod
+    def parse_text(text):
 
         lines = text.split("\n")
         intro = ""
