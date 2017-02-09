@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 
+import Heading
 import Section
 
 class TextParser:
@@ -38,7 +39,7 @@ class TextParser:
     @staticmethod
     def parse_section(lines, start_index):
 
-        heading = lines[start_index]
+        heading = TextParser.parse_heading(lines[start_index])
         content = ""
 
         index = start_index + 1
@@ -51,3 +52,17 @@ class TextParser:
 
         section = Section.Section(heading, content)
         return section, index
+
+    @staticmethod
+    def parse_heading(heading):
+
+        level = 1
+        while level < len(heading) and heading[level] == TextParser.HEADER_START:
+            level = level + 1
+
+        label_start_index = level
+        label_end_index = len(heading) - level
+        label = heading[label_start_index:label_end_index]
+
+        heading = Heading.Heading(level, label)
+        return heading
