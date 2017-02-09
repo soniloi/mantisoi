@@ -6,6 +6,9 @@ import Section
 class TextParser:
 
     HEADER_START = "="
+    MAIN_ARTICLE_START = "{{Main article|"
+    MAIN_ARTICLE_END = "}}"
+    MAIN_ARTICLE_SPLIT = "|"
 
     @staticmethod
     def parse_text(text):
@@ -40,9 +43,15 @@ class TextParser:
     def parse_section(lines, start_index):
 
         heading = TextParser.parse_heading(lines[start_index])
-        content = ""
 
         index = start_index + 1
+        line = lines[index]
+        main_articles = []
+        if line.startswith(TextParser.MAIN_ARTICLE_START):
+            main_articles = TextParser.parse_main_articles(line)
+            index = index + 1
+
+        content = ""
         while index < len(lines):
             line = lines[index]
             if line.startswith(TextParser.HEADER_START):
@@ -50,7 +59,7 @@ class TextParser:
             content = content + line
             index = index + 1
 
-        section = Section.Section(heading, content)
+        section = Section.Section(heading, content, main_articles)
         return section, index
 
     @staticmethod
@@ -66,3 +75,9 @@ class TextParser:
 
         heading = Heading.Heading(level, label)
         return heading
+
+    @staticmethod
+    def parse_main_articles(main_articles):
+        start_index = len(TextParser.MAIN_ARTICLE_START)
+        end_index = len(main_articles) - len(TextParser.MAIN_ARTICLE_END)
+        return main_articles[start_index:end_index].split(TextParser.MAIN_ARTICLE_SPLIT)
