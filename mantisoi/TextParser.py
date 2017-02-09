@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import Section
+
 class TextParser:
 
     HEADER_START = "="
@@ -25,12 +27,27 @@ class TextParser:
     def parse_sections(lines, section_start_index):
 
         sections = []
-        current_section = lines[section_start_index]
-        for line in lines[section_start_index:]:
-            if line.startswith(TextParser.HEADER_START):
-                sections.append(current_section)
-                current_section = ""
-            current_section = current_section + line
+        section_index = section_start_index
 
-        sections.append(current_section) # Append the last section
+        while section_index < len(lines):
+            section, section_index = TextParser.parse_section(lines, section_index)
+            sections.append(section)
+
         return sections
+
+    @staticmethod
+    def parse_section(lines, start_index):
+
+        heading = lines[start_index]
+        content = ""
+
+        index = start_index + 1
+        while index < len(lines):
+            line = lines[index]
+            if line.startswith(TextParser.HEADER_START):
+                break
+            content = content + line
+            index = index + 1
+
+        section = Section.Section(heading, content)
+        return section, index
