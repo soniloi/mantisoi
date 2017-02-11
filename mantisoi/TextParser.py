@@ -33,17 +33,16 @@ class TextParser:
         section_index = section_start_index
 
         while section_index < len(lines):
-            section, section_index = TextParser.parse_section(lines, section_index)
+            level, heading = TextParser.parse_heading(lines[section_index])
+            section, section_index = TextParser.parse_section(lines, section_index + 1, level, heading)
             sections.append(section)
 
         return sections
 
     @staticmethod
-    def parse_section(lines, start_index):
+    def parse_section(lines, start_index, level, heading):
 
-        level, heading = TextParser.parse_heading(lines[start_index])
-
-        index = start_index + 1
+        index = start_index
         line = lines[index]
         main_articles = []
         if line.startswith(TextParser.MAIN_ARTICLE_START):
@@ -51,14 +50,22 @@ class TextParser:
             index = index + 1
 
         content = ""
+        subsections = []
         while index < len(lines):
             line = lines[index]
             if line.startswith(TextParser.HEADER_START):
-                break
-            content = content + line
-            index = index + 1
+                sublevel, subheading = TextParser.parse_heading(line)
+                if level < sublevel:
+                    subsection, index = TextParser.parse_section(lines, index + 1, sublevel, subheading)
+                    subsections.append(subsection)
+                else:
+                    break
+            else:
+                content = content + line
+                index = index + 1
 
         section = Section.Section(heading, level, content, main_articles)
+        section.subsections = subsections
         return section, index
 
     @staticmethod
