@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+import re
+
 import Section
 
 class TextParser:
@@ -7,7 +9,7 @@ class TextParser:
     HEADER_START = "="
     MAIN_ARTICLE_START = "{{Main article|"
     MAIN_ARTICLE_END = "}}"
-    MAIN_ARTICLE_SPLIT = "|"
+    MAIN_ARTICLE_SPLIT = "\|+"
 
     @staticmethod
     def parse_text(text):
@@ -85,4 +87,4 @@ class TextParser:
     def parse_main_articles(main_articles):
         start_index = len(TextParser.MAIN_ARTICLE_START)
         end_index = len(main_articles) - len(TextParser.MAIN_ARTICLE_END)
-        return main_articles[start_index:end_index].split(TextParser.MAIN_ARTICLE_SPLIT)
+        return re.split(TextParser.MAIN_ARTICLE_SPLIT, main_articles[start_index:end_index])

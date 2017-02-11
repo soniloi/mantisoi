@@ -17,6 +17,9 @@ class Section:
         for _ in range(0, self.level):
             print " ",
         print self.level,
-        print self.heading
+        print self.heading,
+        if self.main_articles:
+            print self.main_articles,
+        print "(" + str(len(self.subsections)) + " subs)"
         for subsection in self.subsections:
             subsection.write_out()
