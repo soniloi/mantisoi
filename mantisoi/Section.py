@@ -10,7 +10,6 @@ class Section:
         self.subsections = []
 
     def add_subsection(self, subsection):
-        print "adding subsection [" + subsection.heading + "] to section [" + self.heading + "]"
         self.subsections.append(subsection)
 
     def write_out(self):

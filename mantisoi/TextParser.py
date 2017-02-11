@@ -51,23 +51,26 @@ class TextParser:
             main_articles = TextParser.parse_main_articles(line)
             index = index + 1
 
+        # Find section's actual content
         content = ""
-        subsections = []
         while index < len(lines):
             line = lines[index]
-            if line.startswith(TextParser.HEADER_START):
-                sublevel, subheading = TextParser.parse_heading(line)
-                if level < sublevel:
-                    subsection, index = TextParser.parse_section(lines, index + 1, sublevel, subheading)
-                    subsections.append(subsection)
-                else:
-                    break
-            else:
+            if not line.startswith(TextParser.HEADER_START):
                 content = content + line
                 index = index + 1
+            else:
+                break
 
+        # There is no more content by the time we reach either eof or another heading
         section = Section.Section(heading, level, content, main_articles)
-        section.subsections = subsections
+
+        # Handle nested sections
+        if line.startswith(TextParser.HEADER_START):
+            sublevel, subheading = TextParser.parse_heading(line)
+            if level < sublevel:
+                subsection, index = TextParser.parse_section(lines, index + 1, sublevel, subheading)
+                section.add_subsection(subsection)
+
         return section, index
 
     @staticmethod
