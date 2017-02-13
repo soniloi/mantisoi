@@ -11,6 +11,10 @@ class TextParser:
     MAIN_ARTICLE_END = "}}"
     MAIN_ARTICLE_SPLIT = "\|+"
 
+    SEE_ALSO_START = "{{See also|"
+    SEE_ALSO_END = "}}"
+    SEE_ALSO_SPLIT = "\|+"
+
     @staticmethod
     def parse_text(text):
 
@@ -50,6 +54,13 @@ class TextParser:
         if line.startswith(TextParser.MAIN_ARTICLE_START):
             main_articles = TextParser.parse_main_articles(line)
             index = index + 1
+            line = lines[index]
+
+        see_also = []
+        if line.startswith(TextParser.SEE_ALSO_START):
+            see_also = TextParser.parse_see_also(line)
+            index = index + 1
+            line = lines[index]
 
         # Find section's actual content
         content = ""
@@ -62,7 +73,7 @@ class TextParser:
                 break
 
         # There is no more content by the time we reach either eof or another heading
-        section = Section.Section(heading, level, content, main_articles)
+        section = Section.Section(heading, level, content, main_articles, see_also)
 
         # Handle nested sections
         if line.startswith(TextParser.HEADER_START):
@@ -91,3 +102,9 @@ class TextParser:
         start_index = len(TextParser.MAIN_ARTICLE_START)
         end_index = len(main_articles) - len(TextParser.MAIN_ARTICLE_END)
         return re.split(TextParser.MAIN_ARTICLE_SPLIT, main_articles[start_index:end_index])
+
+    @staticmethod
+    def parse_see_also(see_also):
+        start_index = len(TextParser.SEE_ALSO_START)
+        end_index = len(see_also) - len(TextParser.SEE_ALSO_END)
+        return re.split(TextParser.SEE_ALSO_SPLIT, see_also[start_index:end_index])
