@@ -3,13 +3,12 @@
 from TextParser import TextParser
 from XmlParser import XmlParser
 
+import Article
+
 class MwParser:
 
-    def __init__(self):
-        self.title = ""
-        self.intro = ""
-        self.sections = []
-
-    def parse_article(self, filename):
-        self.title, text = XmlParser.parse_article(filename)
-        self.intro, self.sections = TextParser.parse_text(text)
+    @staticmethod
+    def parse_article(filename):
+        title, text = XmlParser.parse_article(filename)
+        intro, sections = TextParser.parse_text(text)
+        return Article.Article(title, intro, sections)
