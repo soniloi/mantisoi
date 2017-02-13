@@ -4,16 +4,20 @@ import re
 
 import Section
 
+class LinkType:
+    MAIN_ARTICLE = 0
+    SEE_ALSO = 1
+
 class TextParser:
 
     HEADER_START = "="
-    MAIN_ARTICLE_START = "{{Main article|"
-    MAIN_ARTICLE_END = "}}"
-    MAIN_ARTICLE_SPLIT = "\|+"
 
-    SEE_ALSO_START = "{{See also|"
-    SEE_ALSO_END = "}}"
-    SEE_ALSO_SPLIT = "\|+"
+    LINK_LIST_START = {
+        LinkType.MAIN_ARTICLE: "{{Main article|",
+        LinkType.SEE_ALSO: "{{See also|"
+    }
+    LINK_LIST_END = "}}"
+    LINK_LIST_SPLIT = "\|+"
 
     @staticmethod
     def parse_text(text):
@@ -50,17 +54,14 @@ class TextParser:
 
         index = start_index
         line = lines[index]
-        main_articles = []
-        if line.startswith(TextParser.MAIN_ARTICLE_START):
-            main_articles = TextParser.parse_main_articles(line)
-            index = index + 1
-            line = lines[index]
 
-        see_also = []
-        if line.startswith(TextParser.SEE_ALSO_START):
-            see_also = TextParser.parse_see_also(line)
-            index = index + 1
-            line = lines[index]
+        # "Main article(s):"
+        main_articles, index = TextParser.find_link_list(line, index, TextParser.LINK_LIST_START[LinkType.MAIN_ARTICLE])
+        line = lines[index]
+
+        # "See also:"
+        see_also, index = TextParser.find_link_list(line, index, TextParser.LINK_LIST_START[LinkType.SEE_ALSO])
+        line = lines[index]
 
         # Find section's actual content
         content = ""
@@ -98,13 +99,15 @@ class TextParser:
         return level, label
 
     @staticmethod
-    def parse_main_articles(main_articles):
-        start_index = len(TextParser.MAIN_ARTICLE_START)
-        end_index = len(main_articles) - len(TextParser.MAIN_ARTICLE_END)
-        return re.split(TextParser.MAIN_ARTICLE_SPLIT, main_articles[start_index:end_index])
+    def find_link_list(line, index, list_start):
+        result = []
+        if line.startswith(list_start):
+            result = TextParser.parse_link_list(line, list_start, TextParser.LINK_LIST_END, TextParser.LINK_LIST_SPLIT)
+            index = index + 1
+        return result, index
 
     @staticmethod
-    def parse_see_also(see_also):
-        start_index = len(TextParser.SEE_ALSO_START)
-        end_index = len(see_also) - len(TextParser.SEE_ALSO_END)
-        return re.split(TextParser.SEE_ALSO_SPLIT, see_also[start_index:end_index])
+    def parse_link_list(link_list, list_start, list_end, list_split):
+        start_index = len(list_start)
+        end_index = len(link_list) - len(list_end)
+        return re.split(list_split, link_list[start_index:end_index])
