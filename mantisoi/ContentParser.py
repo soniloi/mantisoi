@@ -6,7 +6,7 @@ class ContentParser:
 
     REF_START = "<ref>"
     REF_END = "</ref>"
-    REF_PATTERN = REF_START + ".*?" + REF_END
+    REF_PATTERN = re.compile(REF_START + ".*?" + REF_END, re.MULTILINE|re.DOTALL)
 
     @staticmethod
     def parse_content(content):

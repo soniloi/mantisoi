@@ -68,7 +68,7 @@ class TextParser:
         while index < len(lines):
             line = lines[index]
             if not line.startswith(TextParser.HEADER_START):
-                content = content + line
+                content = content + line + "\n"
                 index = index + 1
             else:
                 break
