@@ -2,19 +2,24 @@
 
 import re
 
+import IntroMeta
 import Section
 import SectionMeta
 
 class LinkType:
-    MAIN_ARTICLE = 0
-    SEE_ALSO = 1
+    CATEGORIES = 0
+    MAIN_ARTICLE = 1
+    REDIRECT = 2
+    SEE_ALSO = 3
 
 class TextParser:
 
     HEADER_START = "="
 
     LINK_LIST_START = {
+        LinkType.CATEGORIES: "{{",
         LinkType.MAIN_ARTICLE: "{{Main article|",
+        LinkType.REDIRECT: "{{Redirect",
         LinkType.SEE_ALSO: "{{See also|"
     }
     LINK_LIST_END = "}}"
@@ -30,10 +35,19 @@ class TextParser:
 
     @staticmethod
     def parse_intro(lines):
-        intro = ""
+
         section_start_index = 0
+        line = lines[section_start_index]
+        redirects, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.REDIRECT])
+
+        line = lines[section_start_index]
+        categories, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.CATEGORIES])
+        intro_meta = IntroMeta.IntroMeta(redirects, categories)
+
+        intro = ""
         while section_start_index < len(lines) and not lines[section_start_index].startswith(TextParser.HEADER_START):
-            intro = intro + lines[section_start_index]
+            line = lines[section_start_index]
+            intro = intro + line
             section_start_index += 1
         return intro, section_start_index
 
