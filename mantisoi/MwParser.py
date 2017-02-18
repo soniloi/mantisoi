@@ -15,10 +15,12 @@ class MwParser:
 
         uncited_intro, citations = ContentParser.parse_content(intro)
 
+        section_metas = []
         uncited_sections = []
         for section in sections:
+            section_metas.append(section.meta)
             uncited_section, section_citations = ContentParser.parse_content(section.content)
             uncited_sections.append(uncited_section)
             citations = citations + section_citations
 
-        return Article.Article(title, uncited_intro, uncited_sections, citations)
+        return Article.Article(title, uncited_intro, section_metas, uncited_sections, citations)
