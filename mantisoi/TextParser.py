@@ -3,6 +3,7 @@
 import re
 
 import Section
+import SectionMeta
 
 class LinkType:
     MAIN_ARTICLE = 0
@@ -74,7 +75,8 @@ class TextParser:
                 break
 
         # There is no more content by the time we reach either eof or another heading
-        section = Section.Section(heading, level, content, main_articles, see_also)
+        section_meta = SectionMeta.SectionMeta(heading, level, main_articles, see_also)
+        section = Section.Section(section_meta, content)
 
         # Handle nested sections
         if line.startswith(TextParser.HEADER_START):
