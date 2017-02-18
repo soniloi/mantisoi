@@ -2,7 +2,8 @@
 
 class Article:
 
-    def __init__(self, title, intro, sections):
+    def __init__(self, title, intro, sections, citations):
         self.title = title
         self.intro = intro
-        self.sections = sections
+        self.section_texts = sections
+        self.citations = citations

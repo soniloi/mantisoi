@@ -4,23 +4,25 @@ import re
 
 class ContentParser:
 
-    REF_START = "<ref>"
-    REF_END = "</ref>"
-    REF_PATTERN = re.compile(REF_START + ".*?" + REF_END, re.MULTILINE|re.DOTALL)
-    REF_LIST_ELEMENT_START = re.compile("^\* +")
+    CITATION_START = "<ref>"
+    CITATION_END = "</ref>"
+    CITATION_PATTERN = re.compile(CITATION_START + ".*?" + CITATION_END, re.MULTILINE|re.DOTALL)
+    CITATION_LIST_ELEMENT_START = re.compile("^\* +")
 
     @staticmethod
     def parse_content(content):
 
-        refs = []
-        ref_matches = re.findall(ContentParser.REF_PATTERN, content)
-        for ref_match in ref_matches:
-            ref_match_untagged = ref_match[len(ContentParser.REF_START):len(ref_match) - len(ContentParser.REF_END)]
-            ref_elements = ref_match_untagged.splitlines()
-            for ref_element in ref_elements:
-                ref = re.sub(ContentParser.REF_LIST_ELEMENT_START, "", ref_element)
-                refs.append(ref)
+        citations = []
+        citation_matches = re.findall(ContentParser.CITATION_PATTERN, content)
+        for citation_match in citation_matches:
+            citation_match_untagged = citation_match[len(ContentParser.CITATION_START):len(citation_match) - len(ContentParser.CITATION_END)]
 
-        unrefed_content = re.sub(ContentParser.REF_PATTERN, "", content)
+            # If the citation found is actually a list of citations, then split it up
+            citation_elements = citation_match_untagged.splitlines()
+            for citation_element in citation_elements:
+                citation = re.sub(ContentParser.CITATION_LIST_ELEMENT_START, "", citation_element)
+                citations.append(citation)
 
-        return unrefed_content, refs
+        uncited_content = re.sub(ContentParser.CITATION_PATTERN, "", content)
+
+        return uncited_content, citations
