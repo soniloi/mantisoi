@@ -15,10 +15,18 @@ class MwParser:
 
         uncited_intro, citations = ContentParser.parse_content(intro)
 
-        section_metas = []
+        section_metas = {}
         uncited_sections = []
         for section in sections:
-            section_metas.append(section.meta)
+
+            # Map section level to other section meta information
+            section_meta = section.meta
+            section_meta_level = section_meta.level
+            if not section_meta_level in section_metas:
+                section_metas[section_meta_level] = []
+            section_metas[section_meta_level].append(section_meta)
+
+            # Split section content into citations and actual content
             uncited_section, section_citations = ContentParser.parse_content(section.content)
             uncited_sections.append(uncited_section)
             citations = citations + section_citations
