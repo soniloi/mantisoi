@@ -40,8 +40,14 @@ class TextParser:
         line = lines[section_start_index]
         redirects, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.REDIRECT])
 
-        line = lines[section_start_index]
-        categories, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.CATEGORIES])
+        categories = []
+        previous_section_start_index = section_start_index - 1
+        while previous_section_start_index != section_start_index:
+            previous_section_start_index = section_start_index
+            line = lines[section_start_index]
+            category, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.CATEGORIES])
+            categories.append(category)
+
         intro_meta = IntroMeta.IntroMeta(redirects, categories)
 
         intro = ""
