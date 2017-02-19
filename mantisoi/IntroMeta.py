@@ -10,6 +10,6 @@ class IntroMeta:
         if self.redirects:
             print "Redirects:",
             print self.redirects
-        if self.category:
-            print "Category: ",
+        if self.categories:
+            print "Categories: ",
             print self.categories

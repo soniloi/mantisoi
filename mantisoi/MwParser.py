@@ -13,7 +13,7 @@ class MwParser:
         title, text = XmlParser.parse_article(filename)
         intro, sections = TextParser.parse_text(text)
 
-        uncited_intro, citations = ContentParser.parse_content(intro)
+        uncited_intro, citations = ContentParser.parse_content(intro.content)
 
         section_metas = {}
         uncited_sections = []
@@ -31,4 +31,4 @@ class MwParser:
             uncited_sections.append(uncited_section)
             citations = citations + section_citations
 
-        return Article.Article(title, uncited_intro, section_metas, uncited_sections, citations)
+        return Article.Article(title, intro.meta, uncited_intro, section_metas, uncited_sections, citations)

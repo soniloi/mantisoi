@@ -2,6 +2,7 @@
 
 import re
 
+import Intro
 import IntroMeta
 import Section
 import SectionMeta
@@ -48,13 +49,14 @@ class TextParser:
             category, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.CATEGORIES])
             categories.append(category)
 
-        intro_meta = IntroMeta.IntroMeta(redirects, categories)
-
-        intro = ""
+        intro_content = ""
         while section_start_index < len(lines) and not lines[section_start_index].startswith(TextParser.HEADER_START):
             line = lines[section_start_index]
-            intro = intro + line
+            intro_content = intro_content + line
             section_start_index += 1
+
+        intro_meta = IntroMeta.IntroMeta(redirects, categories)
+        intro = Intro.Intro(intro_meta, intro_content)
         return intro, section_start_index
 
     @staticmethod
