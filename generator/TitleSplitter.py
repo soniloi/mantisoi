@@ -2,6 +2,8 @@
 
 import re
 
+import Title
+
 class TitleSplitter:
 
     POST_PATTERN = re.compile("\(.+?\) *")
@@ -15,7 +17,7 @@ class TitleSplitter:
         # Separate descriptors (pre) from core word
         pre, core = TitleSplitter.get_pre_and_core(title_str, post_start_index)
 
-        return pre, core, post
+        return Title.Title(pre, core, post)
 
 
     @staticmethod
