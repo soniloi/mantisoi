@@ -10,10 +10,34 @@ class Title:
         self.post = post
 
     def generate_new(self, other):
-        pre = Title.choose_element(self.pre, other.pre)
-        core = Title.choose_element(self.core, other.core)
-        post = Title.choose_element(self.post, other.post)
-        return Title(pre, core, post)
+
+        # Case where we have multiple words to work with in both parent titles
+        if not self.is_only_core() and not other.is_only_core():
+
+            pre = self.pre
+            post = self.post
+            core = Title.choose_element(self.core, other.core)
+
+            if core is self.core:
+                if other.pre:
+                    pre = other.pre
+                    post = Title.choose_element(self.post, other.post)
+                else:
+                    post = other.post
+            else:
+                if self.pre:
+                    post = Title.choose_element(self.post, other.post)
+                else:
+                    post = self.post
+
+            return Title(pre, core, post)
+
+        # Case where one or both titles consists of only a core
+        # Placeholder; FIXME: change this so that it returns a different kind of merged title
+        return Title(self.pre, self.core, self.post)
+
+    def is_only_core(self):
+        return not self.pre and not self.post
 
     @staticmethod
     def choose_element(first, second):
