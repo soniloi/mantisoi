@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 
+from random import randint
+
 class Title:
 
     def __init__(self, pre, core, post):
@@ -8,15 +10,21 @@ class Title:
         self.post = post
 
     def generate_new(self, other):
-        if self.pre:
-            return Title(self.pre, other.core, other.post)
-        if other.pre:
-            return Title(other.pre, self.core, self.post)
-        if self.post:
-            return Title(other.pre, other.core, self.post)
-        if other.post:
-            return Title(self.pre, self.core, other.post)
-        return Title(self.pre, self.core, self.post)
+        pre = Title.choose_element(self.pre, other.pre)
+        core = Title.choose_element(self.core, other.core)
+        post = Title.choose_element(self.post, other.post)
+        return Title(pre, core, post)
+
+    @staticmethod
+    def choose_element(first, second):
+        if first:
+            if second:
+                if randint(0, 1) == 0:
+                    return first
+                else:
+                    return second
+            return first
+        return second
 
     def write_out(self):
         print self.pre,
