@@ -11,33 +11,56 @@ class Title:
 
     def generate_new(self, other):
 
-        # Case where we have multiple words to work with in both parent titles
         if not self.is_only_core() and not other.is_only_core():
+            return self.generate_new_with_non_core(other)
 
-            pre = self.pre
-            post = self.post
-            core = Title.choose_element(self.core, other.core)
+        return self.generate_new_only_core(other)
 
-            if core is self.core:
-                if other.pre:
-                    pre = other.pre
-                    post = Title.choose_element(self.post, other.post)
-                else:
-                    post = other.post
-            else:
-                if self.pre:
-                    post = Title.choose_element(self.post, other.post)
-                else:
-                    post = self.post
-
-            return Title(pre, core, post)
-
-        # Case where one or both titles consists of only a core
-        # Placeholder; FIXME: change this so that it returns a different kind of merged title
-        return Title(self.pre, self.core, self.post)
 
     def is_only_core(self):
         return not self.pre and not self.post
+
+
+    # Case where we have multiple words to work with in both parent titles
+    def generate_new_with_non_core(self, other):
+
+        pre = self.pre
+        post = self.post
+        core = Title.choose_element(self.core, other.core)
+
+        if core is self.core:
+            if other.pre:
+                pre = other.pre
+                post = Title.choose_element(self.post, other.post)
+            else:
+                post = other.post
+        else:
+            if self.pre:
+                post = Title.choose_element(self.post, other.post)
+            else:
+                post = self.post
+
+        return Title(pre, core, post)
+
+
+    # Case where one or both titles consists of only a core
+    def generate_new_only_core(self, other):
+        core = ""
+        if randint(0, 1) == 0:
+            core = Title.split_word(self.core, True) + Title.split_word(other.core, False)
+        else:
+            core = Title.split_word(other.core, True) + Title.split_word(self.core, False)
+        return Title([], core, [])
+
+
+    # Split a word (probably a core word)
+    # FIXME: very basic; make this a proper syllable splitter
+    @staticmethod
+    def split_word(word, start):
+        if start: # We want the start of the word
+            return word[:len(word)/2]
+        return word[len(word)/2:]
+
 
     @staticmethod
     def choose_element(first, second):
