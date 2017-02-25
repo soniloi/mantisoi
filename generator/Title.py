@@ -4,6 +4,33 @@ from random import randint
 
 class Title:
 
+    SUFFIXES = {
+        "ability",
+        "ate",
+        "ation",
+        "er",
+        "icide",
+        "ing",
+        "ism",
+        "ist",
+        "ite",
+        "itis",
+        "itude",
+        "ling",
+        "logy",
+        "ment",
+        "ness",
+        "ocracy",
+        "osis",
+        "philia",
+        "phobia",
+        "pod",
+        "saurus",
+        "ship",
+        "tion",
+        "y",
+    }
+
     def __init__(self, pre, core, post):
         self.pre = pre
         self.core = core
@@ -57,9 +84,27 @@ class Title:
     # FIXME: very basic; make this a proper syllable splitter
     @staticmethod
     def split_word(word, start):
-        if start: # We want the start of the word
+
+        # We want the start of the word
+        if start:
             return word[:len(word)/2]
-        return word[len(word)/2:]
+
+        # We want the end of the word
+        start_index = Title.get_suffix_index(word)
+        if start_index < 0: # No suffix was found, or suffix matches entire word
+            stard_index = len(word)/2
+        return word[start_index:]
+
+
+    @staticmethod
+    def get_suffix_index(word):
+
+        for suffix in Title.SUFFIXES:
+            suffix_index = word.rfind(suffix)
+            if suffix_index > 0:
+                return suffix_index
+
+        return -1
 
 
     @staticmethod
