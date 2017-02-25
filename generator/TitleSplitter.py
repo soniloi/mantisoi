@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import re
 
 import Title
@@ -8,6 +6,10 @@ class TitleSplitter:
 
     POST_PATTERN = re.compile("\(.+?\) *")
 
+    # Split a word into "pre", "core", and "post", where we intend:
+    #  pre to be descriptors (adjectives, genitives, etc.)
+    #  core the main noun, and
+    #  post anything in parentheses after the core
     @staticmethod
     def split(title_str):
 

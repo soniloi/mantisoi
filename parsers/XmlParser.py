@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 import xml.etree.ElementTree as ElementTree
 
 class XmlParser:

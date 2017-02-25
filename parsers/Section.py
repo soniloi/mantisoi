@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class Section:
 
     def __init__(self, meta, content):

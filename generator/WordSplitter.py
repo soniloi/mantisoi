@@ -29,6 +29,7 @@ class WordSplitter:
 
 
     # Split a word as logically as possible
+    # Either a word start or end may be requsted
     # FIXME: make this a proper syllable splitter
     @staticmethod
     def split(word, start):
@@ -49,6 +50,9 @@ class WordSplitter:
         return word[start_index:]
 
 
+    # Return the index of a common word suffix in a word
+    # If the suffix matches the entire word (e.g. "ability"),
+    #  then attempt to find another match
     @staticmethod
     def get_suffix_index(word):
 

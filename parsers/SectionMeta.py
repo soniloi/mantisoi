@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class SectionMeta:
 
     def __init__(self, heading, level, main_articles, see_also):

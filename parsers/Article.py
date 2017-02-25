@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class Article:
 
     def __init__(self, title, intro_meta, intro_content, metas, sections, citations):

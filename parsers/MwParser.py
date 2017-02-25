@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 from ContentParser import ContentParser
 from TextParser import TextParser
 from XmlParser import XmlParser

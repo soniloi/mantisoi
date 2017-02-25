@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-
 class IntroMeta:
 
     def __init__(self, redirects, categories):
