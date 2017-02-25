@@ -85,14 +85,19 @@ class Title:
     @staticmethod
     def split_word(word, start):
 
+        suffix_index = Title.get_suffix_index(word)
+
         # We want the start of the word
         if start:
-            return word[:len(word)/2]
+            end_index = suffix_index
+            if end_index < 1: # No suffix was found, or suffix matches entire word
+                end_index = len(word) / 2
+            return word[:end_index]
 
         # We want the end of the word
-        start_index = Title.get_suffix_index(word)
-        if start_index < 0: # No suffix was found, or suffix matches entire word
-            stard_index = len(word)/2
+        start_index = suffix_index
+        if start_index < 1:
+            start_index = len(word)/2
         return word[start_index:]
 
 
