@@ -49,12 +49,18 @@ class Title:
         self_core = splitter.split(self.core)
         other_core = splitter.split(other.core)
 
+        pre = []
         core = ""
+        post = []
         if randint(0, 1) == 0:
+            pre = other.pre
             core = self_core[0] + other_core[1]
+            post = self.post
         else:
+            pre = self.pre
             core = other_core[0] + self_core[1]
-        return Title([], core, [])
+            post = other.post
+        return Title(pre, core, post)
 
 
     @staticmethod
