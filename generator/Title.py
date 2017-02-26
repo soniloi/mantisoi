@@ -43,24 +43,34 @@ class Title:
         return Title(pre, core, post)
 
 
+    # Create a new title, with 50% chance each that given pre and post
+    #  will be used
+    @staticmethod
+    def create_new_pre_post_variable(possible_pre, core, possible_post):
+
+        pre = possible_pre
+        post = possible_post
+
+        if randint(0, 1) == 0:
+            pre = []
+        if randint(0, 1) ==0:
+            post = []
+
+        return Title(pre, core, post)
+
+
     # Case where one or both titles consists of only a core
     def generate_new_only_core(self, other, splitter):
 
         self_core = splitter.split(self.core)
         other_core = splitter.split(other.core)
 
-        pre = []
-        core = ""
-        post = []
         if randint(0, 1) == 0:
-            pre = other.pre
             core = self_core[0] + other_core[1]
-            post = self.post
+            return Title.create_new_pre_post_variable(other.pre, core, self.post)
         else:
-            pre = self.pre
             core = other_core[0] + self_core[1]
-            post = other.post
-        return Title(pre, core, post)
+            return Title.create_new_pre_post_variable(self.pre, core, other.post)
 
 
     @staticmethod
