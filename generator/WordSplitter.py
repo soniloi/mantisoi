@@ -17,25 +17,21 @@ class WordSplitter:
 
     # Split a word as logically as possible
     # Either a word start or end may be requsted
-    # FIXME: make this a proper syllable splitter
-    def split(self, word, start):
+    def split(self, word):
 
+        # See if we can split by suffix
         split_index = self.get_suffix_index(word)
+
+        # If there are no suffixes, then try to split by prefix
         if split_index < 1:
             split_index = self.get_prefix_index(word)
 
-        # We want the start of the word
-        if start:
-            end_index = split_index
-            if end_index < 1: # No suffix was found, or suffix matches entire word
-                end_index = len(word) / 2
-            return word[:end_index]
+        # Fallback is to split the word down the middle
+        # FIXME: use a proper syllable-splitter instead
+        if split_index < 1:
+            split_index = len(word) / 2
 
-        # We want the end of the word
-        start_index = split_index
-        if start_index < 1:
-            start_index = len(word)/2
-        return word[start_index:]
+        return [word[:split_index], word[split_index:]]
 
 
     # Return the index after the end of a common word prefix in a word

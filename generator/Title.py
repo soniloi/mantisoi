@@ -45,11 +45,15 @@ class Title:
 
     # Case where one or both titles consists of only a core
     def generate_new_only_core(self, other, splitter):
+
+        self_core = splitter.split(self.core)
+        other_core = splitter.split(other.core)
+
         core = ""
         if randint(0, 1) == 0:
-            core = splitter.split(self.core, True) + splitter.split(other.core, False)
+            core = self_core[0] + other_core[1]
         else:
-            core = splitter.split(other.core, True) + splitter.split(self.core, False)
+            core = other_core[0] + self_core[1]
         return Title([], core, [])
 
 
