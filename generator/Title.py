@@ -9,12 +9,12 @@ class Title:
         self.core = core
         self.post = post
 
-    def generate_new(self, other):
+    def generate_new(self, other, splitter):
 
         if not self.is_only_core() and not other.is_only_core():
             return self.generate_new_with_non_core(other)
 
-        return self.generate_new_only_core(other)
+        return self.generate_new_only_core(other, splitter)
 
 
     def is_only_core(self):
@@ -44,12 +44,12 @@ class Title:
 
 
     # Case where one or both titles consists of only a core
-    def generate_new_only_core(self, other):
+    def generate_new_only_core(self, other, splitter):
         core = ""
         if randint(0, 1) == 0:
-            core = WordSplitter.split(self.core, True) + WordSplitter.split(other.core, False)
+            core = splitter.split(self.core, True) + splitter.split(other.core, False)
         else:
-            core = WordSplitter.split(other.core, True) + WordSplitter.split(self.core, False)
+            core = splitter.split(other.core, True) + splitter.split(self.core, False)
         return Title([], core, [])
 
 

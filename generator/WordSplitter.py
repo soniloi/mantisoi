@@ -1,98 +1,28 @@
+import os
+
 class WordSplitter:
 
-    PREFIXES = {
-        "ab",
-        "aero",
-        "bio",
-        "bi",
-        "chrono",
-        "chron",
-        "cosmo",
-        "counter",
-        "deca",
-        "deci",
-        "dec",
-        "deka",
-        "dek",
-        "di",
-        "extra",
-        "hexa",
-        "hex",
-        "hyper",
-        "hypo",
-        "im",
-        "in",
-        "kilo",
-        "mal",
-        "mega",
-        "meta",
-        "micro",
-        "milli",
-        "mis",
-        "mono",
-        "multi",
-        "non",
-        "octa",
-        "octo",
-        "oct",
-        "over",
-        "penta",
-        "pent",
-        "peri",
-        "post",
-        "pre",
-        "quadr",
-        "quinti",
-        "quint",
-        "rect",
-        "sept",
-        "sex",
-        "sub",
-        "super",
-        "syn",
-        "trans",
-        "tri",
-        "uni",
-        "un"
-    }
+    def __init__(self):
+        self.prefixes = WordSplitter.file_to_list("resources/prefixes.txt")
+        self.suffixes = WordSplitter.file_to_list("resources/suffixes.txt")
 
-    SUFFIXES = {
-        "ability",
-        "ate",
-        "ation",
-        "er",
-        "icide",
-        "ing",
-        "ism",
-        "ist",
-        "ite",
-        "itis",
-        "itude",
-        "ling",
-        "logy",
-        "ment",
-        "ness",
-        "ocracy",
-        "osis",
-        "philia",
-        "phobia",
-        "pod",
-        "saurus",
-        "ship",
-        "tion",
-        "y",
-    }
+
+    # Load resource file into string list
+    @staticmethod
+    def file_to_list(filename):
+        filepath = os.path.join(os.path.dirname(__file__), filename)
+        with open(filepath) as file:
+            return file.read().splitlines()
 
 
     # Split a word as logically as possible
     # Either a word start or end may be requsted
     # FIXME: make this a proper syllable splitter
-    @staticmethod
-    def split(word, start):
+    def split(self, word, start):
 
-        split_index = WordSplitter.get_suffix_index(word)
+        split_index = self.get_suffix_index(word)
         if split_index < 1:
-            split_index = WordSplitter.get_prefix_index(word)
+            split_index = self.get_prefix_index(word)
 
         # We want the start of the word
         if start:
@@ -112,12 +42,10 @@ class WordSplitter:
     # If the prefix matches the entire word (e.g. "kilo"),
     #  then attempt to find another match
     # Return -1 if no suitable matches found
-    @staticmethod
-    def get_prefix_index(word):
+    def get_prefix_index(self, word):
 
-        for prefix in WordSplitter.PREFIXES:
+        for prefix in self.prefixes:
             prefix_index = len(prefix)
-            #print "prefix: " + prefix + " wordlen: " + str(len(word)) + " prefindex: " + str(prefix_index)
             if prefix_index < len(word) and word.lower().startswith(prefix):
                 return prefix_index
 
@@ -128,10 +56,9 @@ class WordSplitter:
     # If the suffix matches the entire word (e.g. "ability"),
     #  then attempt to find another match
     # Return -1 if no suitable matches found
-    @staticmethod
-    def get_suffix_index(word):
+    def get_suffix_index(self, word):
 
-        for suffix in WordSplitter.SUFFIXES:
+        for suffix in self.suffixes:
             suffix_index = len(word) - len(suffix)
             if word.endswith(suffix) and suffix_index > 0:
                 return suffix_index
