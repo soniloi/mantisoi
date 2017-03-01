@@ -16,6 +16,10 @@ class MarkovGenerator:
                 words = paragraph.split()
                 bound = len(words) - 2
 
+                # Not interested in anything smaller than the lookback length
+                if len(words) < 2:
+                    continue
+
                 starter = (words[0], words[1])
                 self.starters.append(starter)
 
@@ -29,8 +33,6 @@ class MarkovGenerator:
                     if not lookback in self.lookbacks:
                         self.lookbacks[lookback] = []
                     self.lookbacks[lookback].append(follow)
-
-        print self.lookbacks
 
 
     def generate(self):
