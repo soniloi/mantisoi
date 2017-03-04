@@ -9,6 +9,10 @@ class Title:
         self.core = core
         self.post = post
 
+    # The form of this title to display in definitions etc.
+    def get_intro_form(self):
+        return " ".join(self.pre) + " " + self.core
+
     def generate_new(self, other, splitter):
 
         if not self.is_only_core() and not other.is_only_core():
