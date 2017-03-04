@@ -9,13 +9,13 @@ class MwParser:
     @staticmethod
     def parse_article(filename):
         title, text = XmlParser.parse_article(filename)
-        intro, sections = TextParser.parse_text(text)
+        intro, unnamed_sections, named_sections = TextParser.parse_text(text)
 
         uncited_intro, citations = ContentParser.parse_content(intro.content)
 
         section_metas = {}
         uncited_sections = []
-        for section in sections:
+        for section in unnamed_sections:
 
             # Map section level to other section meta information
             section_meta = section.meta
@@ -29,4 +29,4 @@ class MwParser:
             uncited_sections.append(uncited_section)
             citations = citations + section_citations
 
-        return Article.Article(title, intro.meta, uncited_intro, section_metas, uncited_sections, citations)
+        return Article.Article(title, intro.meta, uncited_intro, section_metas, uncited_sections, named_sections, citations)

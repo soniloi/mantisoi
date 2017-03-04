@@ -24,13 +24,20 @@ class TextParser:
     LINK_LIST_END = "}}"
     LINK_LIST_SPLIT = "\|+"
 
+    NAMED_SECTION_HEADINGS = [
+        "External links",
+        "Further reading",
+        "References",
+        "See also",
+    ]
+
     @staticmethod
     def parse_text(text):
 
         lines = text.split("\n")
         intro, section_start_index = TextParser.parse_intro(lines)
-        sections = TextParser.parse_sections(lines, section_start_index)
-        return intro, sections
+        unnamed_sections, named_sections = TextParser.parse_sections(lines, section_start_index)
+        return intro, unnamed_sections, named_sections
 
     @staticmethod
     def parse_intro(lines):
@@ -60,15 +67,20 @@ class TextParser:
     @staticmethod
     def parse_sections(lines, section_start_index):
 
-        sections = []
+        unnamed_sections = []
+        named_sections = {}
+
         section_index = section_start_index
 
         while section_index < len(lines):
             level, heading = TextParser.parse_heading(lines[section_index])
             section, section_index = TextParser.parse_section(lines, section_index + 1, level, heading)
-            sections.append(section)
+            if heading in TextParser.NAMED_SECTION_HEADINGS:
+                named_sections[heading] = section
+            else:
+                unnamed_sections.append(section)
 
-        return sections
+        return unnamed_sections, named_sections
 
     @staticmethod
     def parse_section(lines, start_index, level, heading):
