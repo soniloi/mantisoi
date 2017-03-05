@@ -11,7 +11,10 @@ class Title:
 
     # The form of this title to display in definitions etc.
     def get_intro_form(self):
-        return " ".join(self.pre) + " " + self.core
+        intro_pre = " ".join(self.pre)
+        if intro_pre:
+            intro_pre = intro_pre + " "
+        return intro_pre + self.core
 
     def generate_new(self, other, splitter):
 
