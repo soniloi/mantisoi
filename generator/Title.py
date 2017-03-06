@@ -19,10 +19,12 @@ class Title:
     def generate_new(self, other, splitter):
 
         if not self.is_only_core() and not other.is_only_core():
-            return self.generate_new_with_non_core(other)
+            possible_titles = self.generate_new_with_non_core(other)
+        else:
+            possible_titles = self.generate_new_only_core(other, splitter)
 
-        possible_titles = self.generate_new_only_core(other, splitter)
-        return possible_titles[randint(0, len(possible_titles))]
+        index = randint(0, len(possible_titles) - 1)
+        return possible_titles[index]
 
 
     def is_only_core(self):
@@ -34,21 +36,30 @@ class Title:
 
         pre = self.pre
         post = self.post
-        core = Title.choose_element(self.core, other.core)
 
-        if core is self.core:
-            if other.pre:
-                pre = other.pre
-                post = Title.choose_element(self.post, other.post)
-            else:
-                post = other.post
-        else:
-            if self.pre:
-                post = Title.choose_element(self.post, other.post)
-            else:
-                post = self.post
+        titles = []
 
-        return Title(pre, core, post)
+        if other.post:
+            titles.append(Title([], self.core, other.post))
+
+        if self.post:
+            titles.append(Title([], other.core, self.post))
+
+        if self.pre:
+            titles.append(Title(self.pre, other.core, []))
+            if self.post:
+                titles.append(Title(self.pre, other.core, self.post))
+            if other.post:
+                titles.append(Title(self.pre, other.core, other.post))
+
+        if other.pre:
+            titles.append(Title(other.pre, self.core, []))
+            if other.post:
+                titles.append(Title(other.pre, self.core, other.post))
+            if self.post:
+                titles.append(Title(other.pre, self.core, self.post))
+
+        return titles
 
 
     # Create variations on a title, where pre and post may or may not
@@ -82,17 +93,6 @@ class Title:
 
         return first_children + second_children
 
-
-    @staticmethod
-    def choose_element(first, second):
-        if first:
-            if second:
-                if randint(0, 1) == 0:
-                    return first
-                else:
-                    return second
-            return first
-        return second
 
     def write_out(self):
         print self.pre,
