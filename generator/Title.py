@@ -21,7 +21,8 @@ class Title:
         if not self.is_only_core() and not other.is_only_core():
             return self.generate_new_with_non_core(other)
 
-        return self.generate_new_only_core(other, splitter)
+        possible_titles = self.generate_new_only_core(other, splitter)
+        return possible_titles[randint(0, len(possible_titles))]
 
 
     def is_only_core(self):
@@ -50,20 +51,21 @@ class Title:
         return Title(pre, core, post)
 
 
-    # Create a new title, with 50% chance each that given pre and post
-    #  will be used
+    # Create variations on a title, where pre and post may or may not
+    #  be included
     @staticmethod
-    def create_new_pre_post_variable(possible_pre, core, possible_post):
+    def generate_new_with_pre_post(possible_pre, core, possible_post):
 
         pre = possible_pre
         post = possible_post
 
-        if randint(0, 1) == 0:
-            pre = []
-        if randint(0, 1) ==0:
-            post = []
+        titles = []
+        titles.append(Title([], core, []))
+        titles.append(Title([], core, post))
+        titles.append(Title(pre, core, []))
+        titles.append(Title(pre, core, post))
 
-        return Title(pre, core, post)
+        return titles
 
 
     # Case where one or both titles consists of only a core
@@ -72,12 +74,13 @@ class Title:
         self_core = splitter.split(self.core)
         other_core = splitter.split(other.core)
 
-        if randint(0, 1) == 0:
-            core = self_core[0] + other_core[1]
-            return Title.create_new_pre_post_variable(other.pre, core, self.post)
-        else:
-            core = other_core[0] + self_core[1]
-            return Title.create_new_pre_post_variable(self.pre, core, other.post)
+        first_child_core = self_core[0] + other_core[1]
+        first_children = Title.generate_new_with_pre_post(other.pre, first_child_core, self.post)
+
+        second_child_core = other_core[0] + self_core[1]
+        second_children = Title.generate_new_with_pre_post(self.pre, second_child_core, other.post)
+
+        return first_children + second_children
 
 
     @staticmethod
