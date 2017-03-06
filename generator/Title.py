@@ -1,5 +1,3 @@
-from random import randint
-
 from WordSplitter import WordSplitter
 
 class Title:
@@ -19,12 +17,11 @@ class Title:
     def generate_new(self, other, splitter):
 
         if not self.is_only_core() and not other.is_only_core():
-            possible_titles = self.generate_new_with_non_core(other)
+            titles = self.generate_new_with_non_core(other)
         else:
-            possible_titles = self.generate_new_only_core(other, splitter)
+            titles = self.generate_new_only_core(other, splitter)
 
-        index = randint(0, len(possible_titles) - 1)
-        return possible_titles[index]
+        return titles
 
 
     def is_only_core(self):

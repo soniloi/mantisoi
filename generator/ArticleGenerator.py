@@ -1,3 +1,4 @@
+from random import randint
 import re
 
 import MarkovGenerator
@@ -15,7 +16,8 @@ class ArticleGenerator:
         first_title = TitleSplitter.split(first_article.title)
         second_title = TitleSplitter.split(second_article.title)
         word_splitter = WordSplitter()
-        child_title = first_title.generate_new(second_title, word_splitter)
+        child_titles = first_title.generate_new(second_title, word_splitter)
+        child_title = child_titles[randint(0, len(child_titles) - 1)]
 
         first_title_intro_form = first_title.get_intro_form()
         second_title_intro_form = second_title.get_intro_form()
