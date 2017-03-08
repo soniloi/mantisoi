@@ -52,7 +52,8 @@ class TextParser:
             previous_section_start_index = section_start_index
             line = lines[section_start_index]
             category, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.CATEGORIES])
-            categories.append(category)
+            if category:
+                categories.append(category)
 
         intro_content = ""
         while section_start_index < len(lines) and not lines[section_start_index].startswith(TextParser.HEADER_START):
@@ -60,7 +61,7 @@ class TextParser:
             intro_content = intro_content + line
             section_start_index += 1
 
-        intro_meta = IntroMeta.IntroMeta(redirects, categories)
+        intro_meta = IntroMeta.IntroMeta(redirects, disambiguations, categories)
         intro = Intro.Intro(intro_meta, intro_content)
         return intro, section_start_index
 
