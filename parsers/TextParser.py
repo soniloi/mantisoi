@@ -44,7 +44,7 @@ class TextParser:
 
         section_start_index = 0
         line = lines[section_start_index]
-        redirects, section_start_index = TextParser.find_link_list(line, section_start_index, TextParser.LINK_LIST_START[LinkType.REDIRECT])
+        redirects, disambiguations, section_start_index = TextParser.find_redirects(line, section_start_index)
 
         categories = []
         previous_section_start_index = section_start_index - 1
@@ -131,6 +131,37 @@ class TextParser:
         label = heading[label_start_index:label_end_index].strip()
 
         return level, label
+
+    @staticmethod
+    def find_redirects(line, index):
+        list_start = TextParser.LINK_LIST_START[LinkType.REDIRECT]
+        list_end = TextParser.LINK_LIST_END
+        redirects = []
+        disambiguations = {}
+        if line.startswith(list_start):
+            list_split = TextParser.LINK_LIST_SPLIT
+            start_index = len(list_start)
+            end_index = len(line) - len(list_end)
+
+            # Figure out the number of redirects (indicated by the number immediately after "Redirect")
+            redirect_count = 1
+            list_split_first_index = re.search(list_split, line).start()
+            if line and list_split_first_index != start_index:
+                redirect_count = int(line[start_index:list_split_first_index])
+
+            tokens = re.split(list_split, line[list_split_first_index:end_index])
+            tokens = filter(None, tokens)
+
+            # The first few will be redirects; the remainder, disambiguations
+            redirects = tokens[0:redirect_count]
+
+            for i in range(redirect_count, len(tokens), 2):
+                disambiguations[tokens[i]] = tokens[i + 1]
+
+            # Another line has been consumed
+            index = index + 1
+
+        return redirects, disambiguations, index
 
     @staticmethod
     def find_link_list(line, index, list_start):
