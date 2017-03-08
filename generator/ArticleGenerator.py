@@ -17,8 +17,18 @@ class ArticleGenerator:
         second_title = TitleSplitter.split(second_article.title)
         word_splitter = WordSplitter()
         child_titles = first_title.generate_new(second_title, word_splitter)
-        child_title = child_titles[randint(0, len(child_titles) - 1)]
 
+        # Take one title at random; the remaining titles can be used as redirects, etc
+        child_title_index = randint(0, len(child_titles) - 1)
+        child_title = child_titles[child_title_index]
+        del child_titles[child_title_index]
+
+        redirects = []
+        for child_title in child_titles:
+            redirects.append(child_title.get_full_form())
+        print redirects
+
+        # Replace any old titles with new titles in introduction
         first_title_intro_form = first_title.get_intro_form()
         second_title_intro_form = second_title.get_intro_form()
         child_title_intro_form = child_title.get_intro_form()

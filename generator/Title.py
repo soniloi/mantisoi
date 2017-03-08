@@ -14,6 +14,13 @@ class Title:
             intro_pre = intro_pre + " "
         return intro_pre + self.core
 
+    def get_full_form(self):
+        intro_form = self.get_intro_form()
+        intro_post = ""
+        if self.post:
+            intro_post = " (" + " ".join(self.post) + ")"
+        return intro_form + intro_post
+
     def generate_new(self, other, splitter):
 
         if not self.is_only_core() and not other.is_only_core():
